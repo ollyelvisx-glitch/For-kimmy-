@@ -135,7 +135,7 @@
 
     <div class="container">
         <div id="lock-screen">
-            <h2>Enter Security Key 🔒</h2>
+            <h2>Enter user name as Key 🔒</h2>
             <p style="color: #666; margin-bottom: 1.5rem;">Hint: Your nickname given by me</p>
             <div class="input-group">
                 <input type="text" id="password-input" placeholder="Type password here...">
@@ -145,9 +145,7 @@
         </div>
 
         <div id="proposal-screen" class="hidden">
-            <div class="gif-container">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW9pZ3A1bndwZ2Z3MnV3N3Z4bW90c3d5bnd6M295cmY4bndpZ3Z6cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3R95f/LN7sHwD36uH7y/giphy.gif" alt="Cute Heart">
-            </div>
+        
             <h1>Will you be mine? 💖</h1>
             <div class="btn-container">
                 <button id="yes-btn">Yes</button>
@@ -156,12 +154,10 @@
         </div>
 
         <div id="success-screen" class="hidden">
-            <div class="gif-container">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXN6OHg4bzl6M3N5bnd6M295cmY4bndpZ3Z6cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3R9/l4pTdcif75jEp2vCg/giphy.gif" alt="Happy Dance">
-            </div>
+        
             <p class="success-message">I’ll always protect and respect you. ✨</p>
             <p class="success-message" style="margin-top: 1rem; font-weight: normal; font-size: 1.1rem; color: #cc4466;">
-                I’ll always treat and love u 🥰 if your also willing to not let me down atte rate ma proposal😂😩♾️💵
+                I’ll always treat and love u 🥰 if your also willing to not let me down💋🎶🎼atte rate ma proposal😂😩♾️💵
             </p>
         </div>
     </div>
@@ -189,7 +185,7 @@
             const userInput = passwordInput.value.trim();
             
             // Checking exact text match "Kimmy Babes"
-            if (userInput === "Kimmy Babes") {
+            if (userInput === "Kimmy") {
                 lockScreen.classList.add('hidden');
                 proposalScreen.classList.remove('hidden');
             } else {
