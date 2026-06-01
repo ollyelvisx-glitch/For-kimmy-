@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Invitation & Receipt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --primary: #ff4081;
+            --secondary: #7c4dff;
+            --dark: #121212;
+            --card-bg: #1e1e1e;
+            --text: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark), #2a1b4e);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Receipt block is built with pure web-safe elements now */
+        .receipt-card {
+            display: none;
+            background: #ffffff !important;
+            color: #000000 !important;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .receipt-footer {
+            text-align: center;
+            border-top: 2px dashed #ccc;
+            padding-top: 15px;
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #222;
+        }
+
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .download-btn {
+            background: #25d366;
+            display: none;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="setup-form">
+        <h1>Birthday Invitation</h1>
+        <p class="subtitle">Secure your spot for the celebration</p>
+        
+        <div class="form-group">
+            <label for="guestName">Your Full Name</label>
+            <input type="text" id="guestName" placeholder="Enter your name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="seatSelect">Select Your Seat</label>
+            <select id="seatSelect" required>
+                <option value="" disabled selected>Choose a seat...</option>
+            </select>
+        </div>
+
+        <button type="button" onclick="generateReceipt()">Book My Spot</button>
+    </div>
+
+    <div id="receipt" class="receipt-card">
+        <div class="receipt-header">
+            <h2 style="color: #121212;">BIRTHDAY CELEBRATION</h2>
+            <p style="font-size: 0.8rem; color: #666;">Exclusive Invitation Ticket</p>
+        </div>
+        
+        <div class="receipt-row">
+            <span style="color:#555; font-weight:600;">Guest Name:</span>
+            <span id="rName" style="font-weight: 700; color: #000;"></span>
+        </div>
+        <div class="receipt-row">
+            <span style="color:#555; font-weight:600;">Assigned Seat:</span>
+            <span id="rSeat" style="font-weight: 700; color: #7c4dff;"></span>
+        </div>
+        <div class="receipt-row">
+            <span style="color:#555; font-weight:600;">Status:</span>
+            <span style="color: green; font-weight: 700;">Confirmed</span>
+        </div>
+
+        <div class="qr-container">
+            <div id="qrcode"></div>
+        </div>
+
+        <div class="receipt-footer">
+            "this is your receipt thanks for booking"
+        </div>
+    </div>
+
+    <button id="downloadBtn" class="download-btn" onclick="downloadReceiptImage()">Download Receipt</button>
+</div>
+
+<script>
+    // Populate dropdown with 25 seats
+    const seatSelect = document.getElementById('seatSelect');
+    for (let i = 1; i <= 25; i++) {
+        let opt = document.createElement('option');
+        opt.value = `Seat #${i}`;
+        opt.innerHTML = `VIP Seat ${i}`;
+        seatSelect.appendChild(opt);
+    }
+
+    let qrCodeInstance = null;
+
+    function generateReceipt() {
+        const name = document.getElementById('guestName').value.trim();
+        const seat = document.getElementById('seatSelect').value;
+
+        if (!name || !seat) {
+            alert('Please complete your name and select a seat.');
+            return;
+        }
+
+        document.getElementById('rName').innerText = name;
+        document.getElementById('rSeat').innerText = seat;
+
+        // Clear the container
+        document.getElementById('qrcode').innerHTML = "";
+
+        // Generate the new QR Code
+        qrCodeInstance = new QRCode(document.getElementById("qrcode"), {
+            text: `Name: ${name} | ${seat}`,
+            width: 128,
+            height: 128,
+            useSVG: true // Changes output structure so canvas captures it perfectly
+        });
+
+        // Make receipt and download button visible
+        document.getElementById('receipt').style.display = 'block';
+        document.getElementById('downloadBtn').style.display = 'block';
+    }
+
+    function downloadReceiptImage() {
+        const receiptElement = document.getElementById('receipt');
+
+        // Execute snapshot capture
+        html2canvas(receiptElement, {
+            useCORS: true, 
+            allowTaint: true,
+            logging: false,
+            scale: 2
+        }).then(canvas => {
+            const image = canvas.toDataURL("image/png");
+            const link = document.createElement('a');
+            link.download = `Birthday_Receipt.png`;
+            link.href = image;
+            link.click();
+        }).catch(err => {
+            console.error("Snapshot error details: ", err);
+            alert("Download failed. If previewing locally, try running this through a live server extension.");
+        });
+    }
+</script>
+
+</body>
+</html>
